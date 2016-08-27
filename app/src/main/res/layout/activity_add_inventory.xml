@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.tk4218.inventorymanager.AddInventoryActivity"
+    tools:showIn="@layout/activity_add_inventory_wrapper">
+
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="300dp"
+        android:id="@+id/imageView"
+        android:scaleType="fitXY"
+        android:src="@drawable/default_image"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:clickable="true"
+        android:onClick="changePicture"
+        android:longClickable="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/StyleName"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:hint="Style Name"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:layout_toStartOf="@+id/SizeSpinner"
+        android:layout_alignRight="@+id/WholesalePrice"
+        android:layout_alignEnd="@+id/WholesalePrice"
+        android:inputType="textCapWords" />
+
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:id="@+id/SizeSpinner"
+        android:spinnerMode="dropdown"
+        android:layout_above="@+id/textView"
+        android:layout_toLeftOf="@+id/MinRetailPrice"
+        android:layout_toStartOf="@+id/MinRetailPrice" />
+
+    <EditText
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/MinRetailPrice"
+        android:hint="Min Retail Price"
+        android:layout_below="@+id/WholesalePrice"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/WholesalePrice"
+        android:hint="Wholesale Price"
+        android:layout_below="@+id/StyleName"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:numeric="decimal" />
+
+    <EditText
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/MinAdvertisePrice"
+        android:hint="Min Advertise Price"
+        android:layout_below="@+id/MaxRetailPrice"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/MaxRetailPrice"
+        android:hint="Max Retail Price"
+        android:layout_below="@+id/MinRetailPrice"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:id="@+id/AmountSpinner"
+        android:layout_below="@+id/SizeSpinner"
+        android:spinnerMode="dropdown"
+        android:entries="@array/amount_array"
+        android:layout_alignLeft="@+id/SizeSpinner"
+        android:layout_alignStart="@+id/SizeSpinner"
+        android:layout_toLeftOf="@+id/MinRetailPrice"
+        android:layout_toStartOf="@+id/MinRetailPrice" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Size"
+        android:id="@+id/labelSize"
+        android:layout_above="@+id/MinRetailPrice"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="20dp"
+        android:layout_alignTop="@+id/SizeSpinner"
+        android:layout_alignBottom="@+id/SizeSpinner"
+        android:gravity="center_vertical"
+        android:textColor="@color/dim_foreground_material_light" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="# of Items"
+        android:id="@+id/textView"
+        android:layout_alignBottom="@+id/MinRetailPrice"
+        android:layout_toStartOf="@+id/SizeSpinner"
+        android:layout_alignParentStart="true"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/dim_foreground_material_light" />
+</RelativeLayout>

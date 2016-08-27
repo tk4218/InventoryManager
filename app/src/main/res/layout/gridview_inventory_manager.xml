@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:background="@drawable/image_bg_selector">
+
+    <ImageView
+        android:layout_width="180dp"
+        android:layout_height="240dp"
+        android:id="@+id/image_inventory"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/dress_example"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/image_inventory"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/button_info"
+            android:layout_weight="1"
+            android:background="@drawable/info"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="2dp" />
+
+        <View android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight=".1"
+            android:background="@android:color/darker_gray" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/button_picture"
+            android:layout_weight="1"
+            android:background="@drawable/picture"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:onClick="takePicture"/>
+
+        <View android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight=".1"
+            android:background="@android:color/darker_gray" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/button_sold"
+            android:layout_weight="1"
+            android:background="@drawable/dollar_sign"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="2dp"
+            android:onClick="soldInventory"/>
+    </LinearLayout>
+
+</RelativeLayout>

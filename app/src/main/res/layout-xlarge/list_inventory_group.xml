@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/inventory_group_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:text="Inventory Style"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Ct"
+        android:id="@+id/styleCount"
+        android:layout_weight="1"
+        android:textSize="32sp"
+        android:layout_gravity="center_vertical"
+        android:textColor="#040000"
+        android:textStyle="bold"
+        android:paddingEnd="15dp"
+        android:paddingRight="15dp" />
+
+    <ImageView
+        android:layout_width="72dp"
+        android:layout_height="96dp"
+        android:id="@+id/styleImage"
+        android:baselineAlignBottom="false"
+        android:layout_weight="1" />
+
+</LinearLayout>
