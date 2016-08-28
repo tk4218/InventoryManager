@@ -2,6 +2,8 @@ package com.tk4218.model;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
@@ -69,10 +71,30 @@ public class ImageManager {
 
 		/* There isn't enough memory to open up more than a couple camera photos */
 		/* So pre-scale the target bitmap into which the file is decoded */
+        Matrix matrix = new Matrix();
 
 		/* Get the size of the ImageView */
         //int targetW = image.getWidth()/imageScale;
         //int targetH = image.getHeight()/imageScale;
+        try {
+            ExifInterface exif = new ExifInterface(photoPath);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+            switch (orientation) {
+                case 6:
+                    matrix.postRotate(90);
+                    break;
+                case 3:
+                    matrix.postRotate(180);
+                    break;
+                case 8:
+                    matrix.postRotate(270);
+                    break;
+                default:
+                    break;
+            }
+        }catch(Exception e){
+
+            }
 
 		/* Get the size of the image */
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -93,6 +115,8 @@ public class ImageManager {
 
 		/* Decode the JPEG file into a Bitmap */
         Bitmap bitmap = BitmapFactory.decodeFile(photoPath, bmOptions);
+        if (bitmap != null)
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
 		/* Associate the Bitmap to the ImageView */
         image.setImageBitmap(bitmap);
