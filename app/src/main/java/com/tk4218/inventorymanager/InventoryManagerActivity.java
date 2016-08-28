@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -28,6 +29,8 @@ import adapters.InventoryGridAdapter;
 public class InventoryManagerActivity extends AppCompatActivity {
 
     static final int REQUEST_TAKE_PHOTO = 1;
+    private static int REQUEST_LOAD_IMAGE = 2;
+
     static final int REQUEST_PERMISSIONS = 100;
 
     String mCurrentPhotoPath = "";
@@ -77,17 +80,34 @@ public class InventoryManagerActivity extends AppCompatActivity {
     }
 
     private void capturePicture() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File f;
-        try {
-            f = imageManager.setUpPhotoFile();
-            mCurrentPhotoPath = f.getAbsolutePath();
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-        } catch (IOException e) {
-            e.printStackTrace();
-            mCurrentPhotoPath = "";
-        }
-        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Load Image").setItems(new CharSequence[]{"Take Picture", "Load Image from Gallery"},
+                new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(which == 0){
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File f;
+                    try {
+                        f = imageManager.setUpPhotoFile();
+                        mCurrentPhotoPath = f.getAbsolutePath();
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        mCurrentPhotoPath = "";
+                    }
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                }
+                if(which == 1){
+                    Intent intent = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                    startActivityForResult(intent, REQUEST_LOAD_IMAGE);
+                }
+            }
+        });
+
+        builder.show();
     }
 
     @Override
@@ -107,7 +127,21 @@ public class InventoryManagerActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        galleryAddPic();
+        if(requestCode == REQUEST_TAKE_PHOTO) {
+            galleryAddPic();
+        }
+        if(requestCode == REQUEST_LOAD_IMAGE) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            mCurrentPhotoPath = cursor.getString(columnIndex);
+            cursor.close();
+        }
         mDbc.updateInventoryPicture(mCurrentPhotoPath, selectInventory.getInt("InventoryKey"));
         selectInventory.setString("InventoryPicture", mCurrentPhotoPath);
         inventory.setAdapter(new InventoryGridAdapter(this, selectInventory));
