@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class AppDatabase extends SQLiteOpenHelper{
 
     public static final String DATABASE_NAME = "App.db";
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
 
     /*****************************************************
      *  Table Names
@@ -37,6 +37,7 @@ public class AppDatabase extends SQLiteOpenHelper{
     public static final String CREATE_TABLE_SIZE =
             "CREATE TABLE " + TABLE_SIZE +
             "( SizeKey      INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + "SortOrder    INTEGER NOT NULL, "
             + "SizeShort    TEXT NOT NULL, "
             + "SizeLong     TEXT NOT NULL )";
 

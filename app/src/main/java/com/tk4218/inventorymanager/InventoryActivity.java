@@ -105,6 +105,7 @@ public class InventoryActivity extends AppCompatActivity {
                         else if(which == 1){
                             TableObject styles = mDbc.getAllStyleNames();
                             final CharSequence styleNames[] = new CharSequence[styles.getRowCount()];
+                            styles.sort("Style", TableObject.SORT_ASCENDING);
                             for(int i = 0; i < styleNames.length; i++){
                                 styleNames[i] = styles.getString("Style");
                                 styles.moveNext();
@@ -156,16 +157,16 @@ public class InventoryActivity extends AppCompatActivity {
             mDbc.insertStyle("Patrick T", 20.00, 36.00, 40.00, 40.00, "");
 
             //Insert intial Sizes
-            mDbc.insertSize("XXS", "2X Extra Small");
-            mDbc.insertSize("XS", "Extra Small");
-            mDbc.insertSize("S", "Small");
-            mDbc.insertSize("M", "Medium");
-            mDbc.insertSize("L", "Large");
-            mDbc.insertSize("XL", "Extra Large");
-            mDbc.insertSize("XXL", "2X Extra Large");
-            mDbc.insertSize("XXXL", "3X Extra Large");
-            mDbc.insertSize("OS", "One Size");
-            mDbc.insertSize("TC", "Tall and Curvy");
+            mDbc.insertSize(1, "XXS", "2X Extra Small");
+            mDbc.insertSize(2, "XS", "Extra Small");
+            mDbc.insertSize(3, "S", "Small");
+            mDbc.insertSize(4, "M", "Medium");
+            mDbc.insertSize(5, "L", "Large");
+            mDbc.insertSize(6, "XL", "Extra Large");
+            mDbc.insertSize(7, "XXL", "2X Extra Large");
+            mDbc.insertSize(8, "XXXL", "3X Extra Large");
+            mDbc.insertSize(9, "OS", "One Size");
+            mDbc.insertSize(10, "TC", "Tall and Curvy");
         }
     }
 

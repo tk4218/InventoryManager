@@ -24,6 +24,9 @@ import java.util.Set;
 
 public class TableObject {
 
+    public static int SORT_ASCENDING = 1;
+    public static int SORT_DESCENDING = 2;
+
     private HashMap<String, List<Object>> tableObject;
     private int rowCount;
     private int currentPosition;
@@ -140,8 +143,48 @@ public class TableObject {
         return false;
     }
 
-    public void sort(){
+    public void sort(String sortColumn, int sortOrder){
+        if(tableObject.get(sortColumn).get(0).getClass().equals(Integer.class)){
+            sortInt(sortColumn, sortOrder);
+        }else if(tableObject.get(sortColumn).get(0).getClass().equals(String.class)){
+            sortString(sortColumn, sortOrder);
+        }
+    }
 
+    private void sortInt(String sortColumn, int sortOrder){
+        Set<String> columnSet = tableObject.keySet();
+        Object temp;
+        for(int i = 1; i < rowCount; i++){
+            for(int j = i; j > 0; j--){
+                if((sortOrder == SORT_ASCENDING && (Integer)tableObject.get(sortColumn).get(j) > (Integer)tableObject.get(sortColumn).get(j-1))
+                        ||(sortOrder == SORT_DESCENDING && (Integer)tableObject.get(sortColumn).get(j) < (Integer)tableObject.get(sortColumn).get(j-1))){
+                    for(int column = 0; column < columnSet.toArray().length; column++){
+                        String columnName = (String)columnSet.toArray()[column];
+                        temp = tableObject.get(columnName).get(j);
+                        tableObject.get(columnName).set(j,tableObject.get(columnName).get(j-1));
+                        tableObject.get(columnName).set(j-1, temp);
+                    }
+                }
+            }
+        }
+    }
+
+    private void sortString(String sortColumn, int sortOrder){
+        Set<String> columnSet = tableObject.keySet();
+        Object temp;
+        for(int i = 1; i < rowCount; i++){
+            for(int j = i; j > 0; j--){
+                if((sortOrder == SORT_ASCENDING && tableObject.get(sortColumn).get(j).toString().compareTo(tableObject.get(sortColumn).get(j-1).toString()) < 0)
+                        ||(sortOrder == SORT_DESCENDING &&tableObject.get(sortColumn).get(j).toString().compareTo(tableObject.get(sortColumn).get(j-1).toString()) > 0)){
+                    for(int column = 0; column < columnSet.toArray().length; column++){
+                        String columnName = (String)columnSet.toArray()[column];
+                        temp = tableObject.get(columnName).get(j);
+                        tableObject.get(columnName).set(j,tableObject.get(columnName).get(j-1));
+                        tableObject.get(columnName).set(j-1, temp);
+                    }
+                }
+            }
+        }
     }
 
     public int getRowCount(){

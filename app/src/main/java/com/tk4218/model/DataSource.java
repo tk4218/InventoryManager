@@ -28,8 +28,9 @@ public class DataSource {
         return new TableObject(results);
     }
 
-    public long insertSize(String sizeShort, String sizeLong){
+    public long insertSize(int sortOrder, String sizeShort, String sizeLong){
         ContentValues values = new ContentValues();
+        values.put("SortOrder", sortOrder);
         values.put("SizeShort", sizeShort);
         values.put("SizeLong", sizeLong);
         return db.insert("tableSize", null, values);
@@ -76,10 +77,10 @@ public class DataSource {
     }
 
     public TableObject getInventoryCounts(){
-        Cursor results = db.rawQuery("select sz.SizeShort, st.Style, count(1) as StyleCount " +
+        Cursor results = db.rawQuery("select sz.SortOrder, sz.SizeShort, st.Style, count(1) as StyleCount " +
                                      "from tableInventory i, tableSize sz, tableStyle st " +
                                      "where i.SizeKey = sz.SizeKey and i.StyleKey = st.StyleKey and i.IsSold = 0 " +
-                                     "group by sz.SizeShort, st.Style", null);
+                                     "group by sz.SizeShort, st.Style order by st.Style, sz.SortOrder", null);
         return new TableObject(results);
     }
 
