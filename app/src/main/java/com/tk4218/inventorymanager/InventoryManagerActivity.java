@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -13,16 +14,28 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.tk4218.model.DataSource;
 import com.tk4218.model.ImageManager;
 import com.tk4218.model.TableObject;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import adapters.InventoryGridAdapter;
 
@@ -34,6 +47,9 @@ public class InventoryManagerActivity extends AppCompatActivity {
     static final int REQUEST_PERMISSIONS = 100;
 
     String mCurrentPhotoPath = "";
+    float discount = 0, additionalCost = 0;
+    double total = 0;
+
 
     DataSource mDbc;
     GridView inventory;
@@ -158,18 +174,92 @@ public class InventoryManagerActivity extends AppCompatActivity {
 
     public void soldInventory(View view){
         if(selectInventory.findFirst("InventoryKey", Integer.parseInt((String)view.getContentDescription()))) {
+
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Sold Inventory");
-            builder.setMessage("Are you sure you want to mark this item as sold?");
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            builder.setIcon(R.drawable.dollar_sign);
+            LayoutInflater inflater = getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.layout_sale_dialog, null);
+            builder.setView(dialogView);
+
+
+            TextView sizeStyle = (TextView) dialogView.findViewById(R.id.size_style);
+            sizeStyle.setText(selectSize + " " + selectStyle);
+
+            TextView salePrice = (TextView) dialogView.findViewById(R.id.sale_price);
+            final TableObject stylePrice = mDbc.findStyle(selectStyle);
+            total = stylePrice.getFloat("MinAdvertisePrice");
+            discount = 0;
+            additionalCost = 0;
+            salePrice.setText("Sale Price: $" + String.format(Locale.US, "%1$.2f", total));
+
+            final TextView totalPrice = (TextView) dialogView.findViewById(R.id.total_price);
+            totalPrice.setText("Total Price: $" + String.format(Locale.US, "%1$.2f", total));
+
+            EditText editDiscount = (EditText) dialogView.findViewById(R.id.discount);
+            editDiscount.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    try {
+                        discount = Float.parseFloat(s.toString());
+                    } catch(Exception e){
+                        discount = 0;
+                    }
+                    total = stylePrice.getFloat("MinAdvertisePrice") - discount + additionalCost;
+                    totalPrice.setText("Total Price: $" + String.format(Locale.US, "%1$.2f", total));
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {}
+            });
+
+            EditText editAddlCost = (EditText) dialogView.findViewById(R.id.additional_cost);
+            editAddlCost.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    try {
+                        additionalCost = Float.parseFloat(s.toString());
+                    } catch(Exception e){
+                        additionalCost = 0;
+                    }
+                    total = stylePrice.getFloat("MinAdvertisePrice") - discount + additionalCost;
+                    totalPrice.setText("Total Price: $" + String.format(Locale.US, "%1$.2f", total));
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {}
+            });
+
+
+            final AutoCompleteTextView soldTo = (AutoCompleteTextView) dialogView.findViewById(R.id.sold_to);
+            TableObject saleNames = mDbc.getSaleNames();
+            if(saleNames.getRowCount() > 0){
+                String [] names = new String[saleNames.getRowCount()];
+                for(int i = 0; i < saleNames.getRowCount(); i++){
+                    Log.d("Names", saleNames.getString("SoldTo"));
+                    names[i] = saleNames.getString("SoldTo");
+                    saleNames.moveNext();
+                }
+                soldTo.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, names));
+            }
+
+            //builder.setMessage("Are you sure you want to mark this item as sold?");
+            builder.setPositiveButton("Sold!", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mDbc.updateInventorySold(1, selectInventory.getInt("InventoryKey"));
+                    mDbc.insertSaleInfo(selectInventory.getInt("InventoryKey"), "", total, soldTo.getText().toString(), new SimpleDateFormat("dd-MMM-yyyy", Locale.US).format(new Date()));
                     selectInventory = mDbc.getStyleInventory(selectSize, selectStyle);
                     inventory.setAdapter(new InventoryGridAdapter(InventoryManagerActivity.this, selectInventory));
                 }
             });
-            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                   //Do Nothing

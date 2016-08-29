@@ -167,6 +167,7 @@ public class InventoryActivity extends AppCompatActivity {
             mDbc.insertSize(8, "XXXL", "3X Extra Large");
             mDbc.insertSize(9, "OS", "One Size");
             mDbc.insertSize(10, "TC", "Tall and Curvy");
+            mDbc.insertSize(11, "Tween", "Tween");
         }
     }
 

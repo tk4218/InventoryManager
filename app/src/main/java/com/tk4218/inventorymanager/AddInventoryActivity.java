@@ -41,9 +41,9 @@ public class AddInventoryActivity extends AppCompatActivity {
     /**************************************************************
      * Global Variables
      ***************************************************************/
-    static final int REQUEST_TAKE_PHOTO = 1;
+    private static final int REQUEST_TAKE_PHOTO = 1;
     private static int REQUEST_LOAD_IMAGE = 2;
-    static final int REQUEST_PERMISSIONS = 100;
+    private static final int REQUEST_PERMISSIONS = 100;
 
     String mCurrentPhotoPath = "";
 
@@ -116,6 +116,46 @@ public class AddInventoryActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "AddInventory Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.tk4218.inventorymanager/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "AddInventory Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.tk4218.inventorymanager/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 
     @Override
@@ -327,50 +367,21 @@ public class AddInventoryActivity extends AppCompatActivity {
         if (confirmation.equals("Yes")) {
             mDbc.updateStylePicture(mCurrentPhotoPath, style.getInt("StyleKey"));
         }
+
+        float wholeSalePrice = Float.parseFloat(wholesalePrice.getText().toString());
+        float minPrice = Float.parseFloat(minRetailPrice.getText().toString());
+        float maxPrice = Float.parseFloat(maxRetailPrice.getText().toString());
+        float minAdvPrice = Float.parseFloat(minAdvertisePrice.getText().toString());
+        if(style != null) {
+            if (style.getFloat("WholeSalePrice") != wholeSalePrice || style.getFloat("RetailMinPrice") != minPrice
+                    || style.getFloat("RetailMaxPrice") != maxPrice || style.getFloat("MinAdvertisePrice") != minAdvPrice) {
+                mDbc.updateStylePrices(wholeSalePrice, minPrice, maxPrice, minAdvPrice, style.getInt("StyleKey"));
+            }
+        }
         int numOfItems = Integer.parseInt(amountSpinner.getSelectedItem().toString());
         for (int i = 0; i < numOfItems; i++) {
             mDbc.insertInventory(size.getInt("SizeKey"), style.getInt("StyleKey"), 0, new SimpleDateFormat("dd-MMM-yyyy", Locale.US).format(new Date()), "", 0, "");
         }
         finish();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "AddInventory Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.tk4218.inventorymanager/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "AddInventory Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.tk4218.inventorymanager/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
     }
 }

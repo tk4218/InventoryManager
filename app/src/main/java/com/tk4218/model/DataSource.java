@@ -123,5 +123,29 @@ public class DataSource {
         values.put("IsSold", isSold);
         return db.update("tableInventory", values, "InventoryKey=?", new String[] {inventoryKey+""});
     }
+
+    public int updateStylePrices(float wholesalePrice, float minRetailPrice, float maxRetailPrice, float minAdvertisePrice, int styleKey){
+        ContentValues values = new ContentValues();
+        values.put("WholesalePrice", wholesalePrice);
+        values.put("RetailMinPrice", minRetailPrice);
+        values.put("RetailMaxPrice", maxRetailPrice);
+        values.put("MinAdvertisePrice", minAdvertisePrice);
+        return db.update("tableStyle", values, "StyleKey=?", new String[]{styleKey+""});
+    }
+
+    public long insertSaleInfo(int inventoryKey, String saleType, double salePrice, String soldTo, String soldDate){
+        ContentValues values = new ContentValues();
+        values.put("InventoryKey", inventoryKey);
+        values.put("SaleType", saleType);
+        values.put("SalePrice", salePrice);
+        values.put("SoldTo", soldTo);
+        values.put("SoldDate", soldDate);
+        return db.insert("tableSaleInfo", null, values);
+    }
+
+    public TableObject getSaleNames(){
+        Cursor results = db.rawQuery("Select Distinct SoldTo from tableSaleInfo", null);
+        return new TableObject(results);
+    }
 }
 
