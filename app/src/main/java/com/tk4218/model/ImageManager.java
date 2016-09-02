@@ -157,7 +157,7 @@ public class ImageManager {
         } else if(cancelPotentialWork(photoPath, imageView)){
             final BitmapWorkerTask task = new BitmapWorkerTask(imageView, width, height);
             final AsyncDrawable asyncDrawable = new AsyncDrawable(resources,
-                    BitmapFactory.decodeResource(resources, android.R.color.darker_gray), task);
+                    BitmapFactory.decodeResource(resources, android.R.drawable.ic_menu_gallery), task);
             imageView.setImageDrawable(asyncDrawable);
             task.execute(photoPath);
         }
