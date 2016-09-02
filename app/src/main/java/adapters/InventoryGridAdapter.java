@@ -57,6 +57,8 @@ public class InventoryGridAdapter extends BaseAdapter {
             imageManager.loadBitmap(inventory.getString("InventoryPicture"), inventoryImage, width, height, context.getResources());
             //inventoryImage.setImageBitmap(imageManager.setPic(inventory.getString("InventoryPicture"), inventoryImage.getWidth(), inventoryImage.getHeight()));
             //imageManager.setPic(inventory.getString("InventoryPicture"), inventoryImage, 10);
+        } else {
+            inventoryImage.setImageResource(android.R.drawable.ic_menu_gallery);
         }
 
         int inventoryKey = inventory.getInt("InventoryKey");
