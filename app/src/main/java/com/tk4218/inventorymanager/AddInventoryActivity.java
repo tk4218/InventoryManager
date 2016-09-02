@@ -251,7 +251,8 @@ public class AddInventoryActivity extends AppCompatActivity {
             mCurrentPhotoPath = cursor.getString(columnIndex);
             cursor.close();
         }
-        imageManager.setPic(mCurrentPhotoPath, styleImage, 1);
+        styleImage.setImageBitmap(imageManager.setPic(mCurrentPhotoPath, styleImage.getLayoutParams().width, styleImage.getLayoutParams().height));
+        //imageManager.setPic(mCurrentPhotoPath, styleImage, 1);
     }
 
     /************************************************************************
@@ -313,7 +314,8 @@ public class AddInventoryActivity extends AppCompatActivity {
                 minAdvertisePrice.setText(String.format(Locale.US, "%1$.2f", style.getFloat("MinAdvertisePrice")));
                 mCurrentPhotoPath = style.getString("StylePicture");
                 if (!mCurrentPhotoPath.equals("")) {
-                    imageManager.setPic(mCurrentPhotoPath, styleImage, 1);
+                    styleImage.setImageBitmap(imageManager.setPic(mCurrentPhotoPath, styleImage.getLayoutParams().width, styleImage.getLayoutParams().height));
+                    //imageManager.setPic(mCurrentPhotoPath, styleImage, 1);
                 } else {
                     styleImage.setImageResource(R.drawable.default_image);
                 }

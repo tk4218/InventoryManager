@@ -135,7 +135,7 @@ public class TableObject {
 
     public boolean findFirst(String filterColumn, Object filterValue){
         for(int i =0; i < getRowCount(); i++){
-            if(tableObject.get(filterColumn).get(i) == filterValue){
+            if(filterValue.equals(tableObject.get(filterColumn).get(i))){
                 currentPosition = i;
                 return true;
             }

@@ -1,6 +1,7 @@
 package adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,10 +52,15 @@ public class InventoryGridAdapter extends BaseAdapter {
         inventory.moveToPosition(position);
         ImageView inventoryImage = (ImageView) convertView.findViewById(R.id.image_inventory);
         if(!inventory.getString("InventoryPicture").equals("")){
-            imageManager.setPic(inventory.getString("InventoryPicture"), inventoryImage, 10);
+            int width = inventoryImage.getLayoutParams().width;
+            int height = inventoryImage.getLayoutParams().height;
+            imageManager.loadBitmap(inventory.getString("InventoryPicture"), inventoryImage, width, height, context.getResources());
+            //inventoryImage.setImageBitmap(imageManager.setPic(inventory.getString("InventoryPicture"), inventoryImage.getWidth(), inventoryImage.getHeight()));
+            //imageManager.setPic(inventory.getString("InventoryPicture"), inventoryImage, 10);
         }
 
         int inventoryKey = inventory.getInt("InventoryKey");
+        Log.d("Position/InventoryKey", position+"/"+inventoryKey);
         Button picture = (Button) convertView.findViewById(R.id.button_picture);
         picture.setContentDescription(inventoryKey+"");
         Button sold = (Button) convertView.findViewById(R.id.button_sold);

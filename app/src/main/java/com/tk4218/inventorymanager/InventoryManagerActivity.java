@@ -173,7 +173,9 @@ public class InventoryManagerActivity extends AppCompatActivity {
     }
 
     public void soldInventory(View view){
-        if(selectInventory.findFirst("InventoryKey", Integer.parseInt((String)view.getContentDescription()))) {
+        Log.d("InventoryKey", view.getContentDescription().toString());
+        final int inventoryKey = Integer.parseInt((String)view.getContentDescription());
+        if(selectInventory.findFirst("InventoryKey", inventoryKey)) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Sold Inventory");
@@ -253,15 +255,22 @@ public class InventoryManagerActivity extends AppCompatActivity {
             builder.setPositiveButton("Sold!", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    mDbc.updateInventorySold(1, selectInventory.getInt("InventoryKey"));
-                    mDbc.insertSaleInfo(selectInventory.getInt("InventoryKey"), "", total, soldTo.getText().toString(), new SimpleDateFormat("dd-MMM-yyyy", Locale.US).format(new Date()));
+                    Log.d("Sold", "Inventory Key:" + inventoryKey+"");
+                    mDbc.updateInventorySold(1, inventoryKey);
+                    mDbc.insertSaleInfo(inventoryKey, "", total, soldTo.getText().toString(), new SimpleDateFormat("dd-MMM-yyyy", Locale.US).format(new Date()));
                     selectInventory = mDbc.getStyleInventory(selectSize, selectStyle);
+                    while(!selectInventory.EOF()){
+                        Log.d("Inventory", selectInventory.getInt("InventoryKey") + " " + selectInventory.getString("InventoryPicture"));
+                        selectInventory.moveNext();
+                    }
+                    selectInventory.moveFirst();
                     inventory.setAdapter(new InventoryGridAdapter(InventoryManagerActivity.this, selectInventory));
                 }
             });
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    Log.d("InventoryKey", selectInventory.getInt("InventoryKey") +"");
                   //Do Nothing
                 }
             });

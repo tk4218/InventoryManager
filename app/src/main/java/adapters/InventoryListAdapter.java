@@ -1,6 +1,7 @@
 package adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,7 +113,12 @@ public class InventoryListAdapter extends BaseExpandableListAdapter{
         inventoryGroup.setText(groupData.get(groupPosition));
         styleCount.setText(inventoryData.filter("Style", groupData.get(groupPosition)).sum("StyleCount")+"");
         TableObject stylePicture  = mDbc.getStyleImage(groupData.get(groupPosition));
-        imageManager.setPic(stylePicture.getString("StylePicture"), styleImage, 25);
+
+        int width = styleImage.getLayoutParams().width;
+        int height = styleImage.getLayoutParams().height;
+        imageManager.loadBitmap(stylePicture.getString("StylePicture"), styleImage, width, height, context.getResources());
+        //styleImage.setImageBitmap(imageManager.setPic(stylePicture.getString("StylePicture"), styleImage.getWidth(), styleImage.getHeight()));
+        //imageManager.setPic(stylePicture.getString("StylePicture"), styleImage, 25);
         return convertView;
     }
 
